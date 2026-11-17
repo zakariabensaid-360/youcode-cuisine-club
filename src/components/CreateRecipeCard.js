@@ -63,6 +63,7 @@ export default function CreateRecipeCard(recipe) {
   const deleteBtn = document.createElement("button");
   deleteBtn.type = "button";
   deleteBtn.dataset.action = "delete";
+  
   deleteBtn.className =
     "px-3 py-1.5 text-xs font-medium text-red-600 bg-white hover:bg-red-50 border border-red-200 rounded-lg cursor-pointer";
   deleteBtn.textContent = "Supprimer";
