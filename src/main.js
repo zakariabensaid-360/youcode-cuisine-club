@@ -176,14 +176,9 @@ const payload = {
 
   addModal.classList.toggle("hidden")
 });
-/*
-async function test() {
-  const response = await getAllRecipies()
-  let cards = response.recipes.map(createRecipeCard)
-  cardbox.append(...cards)
-}
-test()
 
-*/
 
+
+
+renderCards(getAllRecipies);
 
