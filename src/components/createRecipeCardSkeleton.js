@@ -1,4 +1,4 @@
-export default function CreateRecipeCardSkeleton() {
+export default function createRecipeCardSkeleton() {
   const card = document.createElement("article");
   card.className =
     "bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col justify-between animate-pulse";

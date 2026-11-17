@@ -1,4 +1,4 @@
-export default function CreateRecipeCard(recipe) {
+export default function createRecipeCard(recipe) {
   const card = document.createElement("article");
   card.className =
     "bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col justify-between";
