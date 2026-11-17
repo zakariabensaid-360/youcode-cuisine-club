@@ -1,3 +1,4 @@
+import createRecipe from "./api/createRecipe";
 import deleteRecipe from "./api/deleteRecipe";
 import getAllRecipies from "./api/getAllRecipies";
 import searchRecipe from "./api/searchRecipe";
@@ -13,8 +14,9 @@ const searchButton = document.getElementById("search-btn");
 const resetButton = document.getElementById("reset-btn");
 const errorSection = document.getElementById("error");
 const errorTitle = document.getElementById("error-title");
+const addDisplay =  document.getElementById("add-display")
 const errorMessage = document.getElementById("error-message");
-
+const addModal =  document.getElementById("add-modal")
 async function renderCards(cb, search = false) {
   try {
     searchButton.disabled = true;
@@ -88,6 +90,92 @@ cardbox.addEventListener("click", async (e) => {
 })
 
 
+addDisplay.addEventListener("click" , (e) => { 
+  addModal.classList.toggle("hidden")
+})
+
+const recipeForm = document.getElementById("recipe-form");
+const nameRecipe = document.getElementById("name");
+const cookingMethod = document.getElementById("cooking");
+const difficultyLevel = document.getElementById("difficulty");
+const prepTime = document.getElementById("time");
+
+const nameError = document.getElementById("name-error");
+const cookingError = document.getElementById("cooking-error");
+const difficultyError = document.getElementById("difficulty-error");
+const timeError = document.getElementById("time-error");
+const successMessage = document.getElementById("success-message");
+
+recipeForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const trimmedName = nameRecipe.value.trim();
+  const selectedCooking = cookingMethod.value;
+  const selectedDifficulty = difficultyLevel.value;
+  const parsedTime = Number(prepTime.value);
+
+  const isNameValid = trimmedName.length >= 3 && trimmedName.length <= 60;
+  const isCookingValid = Boolean(selectedCooking);
+  const isDifficultyValid = Boolean(selectedDifficulty);
+  const isTimeValid =
+    Number.isFinite(parsedTime) && parsedTime >= 1 && parsedTime <= 300;
+
+  nameError.classList.toggle("hidden", isNameValid);
+  cookingError.classList.toggle("hidden", isCookingValid);
+  difficultyError.classList.toggle("hidden", isDifficultyValid);
+  timeError.classList.toggle("hidden", isTimeValid);
+
+  if (!isNameValid || !isCookingValid || !isDifficultyValid || !isTimeValid) {
+    successMessage.classList.add("hidden");
+    return;
+  }
+
+const payload = {
+    id: Date.now(),
+    name: trimmedName,
+    ingredients: [
+      "Fresh ingredients",
+      "Olive oil",
+      "Salt and pepper to taste",
+    ],
+    instructions: [
+      `Prepare ingredients for ${selectedCooking}.`,
+      `Cook using ${selectedCooking} method for ${parsedTime} minutes.`,
+      "Serve warm.",
+    ],
+    prepTimeMinutes: 10,
+    cookTimeMinutes: parsedTime,
+    servings: 4,
+    difficulty:
+      selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1),
+    cuisine: "Moroccan",
+    caloriesPerServing: 350,
+    tags: [
+      selectedCooking.charAt(0).toUpperCase() + selectedCooking.slice(1),
+      "Homemade",
+    ],
+    userId: 45,
+    image: "https://cdn.dummyjson.com/recipe-images/1.webp",
+    rating: 4.5,
+    reviewCount: 1,
+    mealType: ["Dinner"],
+  };
+  successMessage.classList.remove("hidden");
+
+  try {
+    const card =  createRecipeCard(payload)
+    cardbox.append(card)
+    const response = await createRecipe(payload)
+    console.log(response)
+  } catch (error) {
+    alert("an error did happen check the console for information")
+    console.log(error)
+  }
+  recipeForm.reset();
+
+
+  addModal.classList.toggle("hidden")
+});
 /*
 async function test() {
   const response = await getAllRecipies()
