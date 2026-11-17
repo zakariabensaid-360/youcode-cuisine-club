@@ -2,8 +2,8 @@ import createRecipe from "./api/createRecipe";
 import deleteRecipe from "./api/deleteRecipe";
 import getAllRecipies from "./api/getAllRecipies";
 import searchRecipe from "./api/searchRecipe";
-import createRecipeCard from "./components/CreateRecipeCard";
-import CreateRecipeCardSkeleton from "./components/createRecipeCardSkeleton";
+import createRecipeCard from "./components/ceateRecipeCard";
+import createRecipeCardSkeleton from "./components/createRecipeCardSkeleton";
 
 const cardbox = document.getElementById("cardbox");
 const counter = document.getElementById("counter");
@@ -24,7 +24,7 @@ async function renderCards(cb, search = false) {
     error.classList.add("hidden");
     cardbox.replaceChildren();
     for (let i = 0; i < 12; i++) {
-      cardbox.append(CreateRecipeCardSkeleton());
+      cardbox.append(createRecipeCardSkeleton());
     }
     if (search) {
       const response = await cb(searchInput.value);
