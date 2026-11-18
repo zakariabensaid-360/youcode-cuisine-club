@@ -67,11 +67,6 @@ searchButton.addEventListener("click", (e) => {
 resetButton.addEventListener("click", (e) => {
   e.preventDefault();
   renderCards(getAllRecipies);
-
-setTimeout(() => {
- console.log(cardbox.querySelector(`[data-recipe-id="2"]`))
-}, 2000)
- 
 });
 
 cardbox.addEventListener("click", async (e) => {
@@ -81,8 +76,8 @@ cardbox.addEventListener("click", async (e) => {
   const article = button.closest("article")
   const id = article.dataset.recipeId
   try {
+  await deleteRecipe(id)
   article.remove()
-  deleteRecipe(id)
   counter.textContent = Number(counter.textContent) - 1
   } catch (error) {
     alert("failed to delete ")
@@ -163,10 +158,9 @@ const payload = {
   successMessage.classList.remove("hidden");
 
   try {
-    const card =  createRecipeCard(payload)
-    cardbox.append(card)
     const response = await createRecipe(payload)
-    console.log(response)
+    const card =  createRecipeCard(response)
+    cardbox.append(card)
   } catch (error) {
     alert("an error did happen check the console for information")
     console.log(error)
