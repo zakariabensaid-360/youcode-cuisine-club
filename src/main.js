@@ -17,6 +17,7 @@ const errorTitle = document.getElementById("error-title");
 const addDisplay =  document.getElementById("add-display")
 const errorMessage = document.getElementById("error-message");
 const addModal =  document.getElementById("add-modal")
+const retry =  document.getElementById("retry-btn")
 async function renderCards(cb, search = false) {
   try {
     searchButton.disabled = true;
@@ -48,10 +49,41 @@ async function renderCards(cb, search = false) {
       counter.textContent = cards.length;
     }
   } catch (error) {
-    cardbox.replaceChildren();
-    errorSection.classList.remove("hidden");
-    errorTitle.textContent = error.name;
-    errorMessage.textContent = error.message;
+function formatAxiosError(error) {
+  if (!error.response) {
+    return {
+      title: "Connection Problem",
+      message: "Couldn't reach the server. Check your internet connection and try again."
+    };
+  }
+
+  const status = error.response.status;
+
+  if (status === 404) {
+    return {
+      title: "Not Found",
+      message: "No matching recipes were found."
+    };
+  }
+
+  if (status >= 500) {
+    return {
+      title: "Server Error",
+      message: "The server is having trouble right now. Please try again shortly."
+    };
+  }
+
+  return {
+    title: "Request Failed",
+    message: error.response.data?.message || `Something went wrong (status ${status}).`
+  };
+}
+
+cardbox.replaceChildren();
+errorSection.classList.remove("hidden");
+const { title, message } = formatAxiosError(error);
+errorTitle.textContent = title;
+errorMessage.textContent = message;
   } finally {
     searchButton.disabled = false;
     resetButton.disabled = false;
@@ -173,6 +205,12 @@ const payload = {
 
 
 
+
+retry.addEventListener("click", (e) => {
+  e.preventDefault()
+  renderCards(getAllRecipies);
+
+})
 
 renderCards(getAllRecipies);
 
