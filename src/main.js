@@ -117,6 +117,63 @@ cardbox.addEventListener("click", async (e) => {
 })
 
 
+
+let draggedItem = null
+let draggedOver = null
+
+const dragStyles = ["opacity-50", "scale-95", "ring-2", "ring-amber-500"]
+const dragOverStyles = ["opacity-50", "scale-95", "ring-2", "ring-green-500"]
+
+cardbox.addEventListener("dragstart", (e) => {
+  const article = e.target.closest("article")
+  if (!article) return
+
+  draggedItem = article
+  for (let i = 0; i < dragStyles.length; i++) {
+    draggedItem.classList.add(dragStyles[i])
+  }
+})
+
+
+
+cardbox.addEventListener("dragover", async (e) => {
+
+  const article = e.target.closest("article")
+  if(article == draggedItem) return;
+  draggedOver = article
+    for (let i = 0; i < dragOverStyles.length; i++) {
+    draggedOver.classList.add(dragOverStyles[i])
+  }
+})
+
+cardbox.addEventListener("dragleave", (e) => {
+  if(draggedOver) {
+    for (let i = 0; i < dragOverStyles.length; i++) {
+      draggedOver.classList.remove(dragOverStyles[i])
+    }
+  }
+})
+
+cardbox.addEventListener("dragend", () => {
+  console.log("the dragged item", draggedItem)
+  console.log("========================")
+  console.log("the dragged over", draggedOver)
+
+  if (draggedItem && draggedOver && draggedItem !== draggedOver) {
+for (let i = 0; i < dragStyles.length; i++) {
+      draggedItem.classList.remove(dragStyles[i])
+    }
+
+    const test = document.createElement("div")
+    draggedOver.before(test)
+    draggedItem.replaceWith(draggedOver)
+    test.replaceWith(draggedItem)
+  }
+
+  draggedItem = null
+  draggedOver = null
+})
+
 addDisplay.addEventListener("click" , (e) => { 
   addModal.classList.toggle("hidden")
 })
