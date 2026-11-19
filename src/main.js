@@ -2,6 +2,7 @@ import createRecipe from "./api/createRecipe";
 import deleteRecipe from "./api/deleteRecipe";
 import getAllRecipies from "./api/getAllRecipies";
 import searchRecipe from "./api/searchRecipe";
+import updateRecipe from "./api/updateRecipe";
 import createRecipeCard from "./components/ceateRecipeCard";
 import createRecipeCardSkeleton from "./components/createRecipeCardSkeleton";
 
@@ -104,9 +105,12 @@ resetButton.addEventListener("click", (e) => {
 cardbox.addEventListener("click", async (e) => {
   e.preventDefault()
   const button = e.target.closest("button")
+  
   if(!button) return;
-  const article = button.closest("article")
+
+    const article = button.closest("article")
   const id = article.dataset.recipeId
+  if(button.dataset.action === "delete") {
   try {
   await deleteRecipe(id)
   article.remove()
@@ -114,8 +118,81 @@ cardbox.addEventListener("click", async (e) => {
   } catch (error) {
     alert("failed to delete ")
   }
+  } else if(button.dataset.action === "update") {
+    try {
+      const Name = prompt("What is the new name?");
+
+
+      const updated = await  updateRecipe(id, {
+        name: Name
+      })
+
+      article.replaceWith(createRecipeCard(updated))
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+
 })
 
+
+
+let draggedItem = null
+let draggedOver = null
+
+const dragStyles = ["opacity-50", "scale-95", "ring-2", "ring-amber-500"]
+const dragOverStyles = ["opacity-50", "scale-95", "ring-2", "ring-green-500"]
+
+cardbox.addEventListener("dragstart", (e) => {
+  const article = e.target.closest("article")
+  if (!article) return
+
+  draggedItem = article
+  for (let i = 0; i < dragStyles.length; i++) {
+    draggedItem.classList.add(dragStyles[i])
+  }
+})
+
+
+
+cardbox.addEventListener("dragover", async (e) => {
+
+  const article = e.target.closest("article")
+  if(article == draggedItem) return;
+  draggedOver = article
+    for (let i = 0; i < dragOverStyles.length; i++) {
+    draggedOver.classList.add(dragOverStyles[i])
+  }
+})
+
+cardbox.addEventListener("dragleave", (e) => {
+  if(draggedOver) {
+    for (let i = 0; i < dragOverStyles.length; i++) {
+      draggedOver.classList.remove(dragOverStyles[i])
+    }
+  }
+})
+
+cardbox.addEventListener("dragend", () => {
+  console.log("the dragged item", draggedItem)
+  console.log("========================")
+  console.log("the dragged over", draggedOver)
+
+  if (draggedItem && draggedOver && draggedItem !== draggedOver) {
+for (let i = 0; i < dragStyles.length; i++) {
+      draggedItem.classList.remove(dragStyles[i])
+    }
+
+    const test = document.createElement("div")
+    draggedOver.before(test)
+    draggedItem.replaceWith(draggedOver)
+    test.replaceWith(draggedItem)
+  }
+
+  draggedItem = null
+  draggedOver = null
+})
 
 addDisplay.addEventListener("click" , (e) => { 
   addModal.classList.toggle("hidden")
