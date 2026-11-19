@@ -2,6 +2,7 @@ import createRecipe from "./api/createRecipe";
 import deleteRecipe from "./api/deleteRecipe";
 import getAllRecipies from "./api/getAllRecipies";
 import searchRecipe from "./api/searchRecipe";
+import updateRecipe from "./api/updateRecipe";
 import createRecipeCard from "./components/ceateRecipeCard";
 import createRecipeCardSkeleton from "./components/createRecipeCardSkeleton";
 
@@ -104,9 +105,12 @@ resetButton.addEventListener("click", (e) => {
 cardbox.addEventListener("click", async (e) => {
   e.preventDefault()
   const button = e.target.closest("button")
+  
   if(!button) return;
-  const article = button.closest("article")
+
+    const article = button.closest("article")
   const id = article.dataset.recipeId
+  if(button.dataset.action === "delete") {
   try {
   await deleteRecipe(id)
   article.remove()
@@ -114,6 +118,22 @@ cardbox.addEventListener("click", async (e) => {
   } catch (error) {
     alert("failed to delete ")
   }
+  } else if(button.dataset.action === "update") {
+    try {
+      const Name = prompt("What is the new name?");
+
+
+      const updated = await  updateRecipe(id, {
+        name: Name
+      })
+
+      article.replaceWith(createRecipeCard(updated))
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+
 })
 
 
