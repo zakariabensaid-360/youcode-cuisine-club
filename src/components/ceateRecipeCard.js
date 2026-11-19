@@ -69,7 +69,14 @@ export default function createRecipeCard(recipe) {
     "px-3 py-1.5 text-xs font-medium text-red-600 bg-white hover:bg-red-50 border border-red-200 rounded-lg cursor-pointer";
   deleteBtn.textContent = "Supprimer";
 
-  footer.append(mealText, deleteBtn);
+
+  const updateBtn = document.createElement("button");
+updateBtn.type = "button";
+updateBtn.dataset.action = "update";
+updateBtn.className =
+  "px-3 py-1.5 text-xs font-medium text-amber-700 bg-white hover:bg-amber-50 border border-amber-200 rounded-lg cursor-pointer";
+updateBtn.textContent = "Modifier";
+  footer.append(mealText, deleteBtn, updateBtn);
   card.append(img, body, footer);
 
   return card;
