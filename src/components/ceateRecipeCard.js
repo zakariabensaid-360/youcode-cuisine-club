@@ -3,7 +3,8 @@ export default function createRecipeCard(recipe) {
   card.className =
     "bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col justify-between";
   card.dataset.recipeId = recipe.id;
-
+  card.draggable = true
+  
   const img = document.createElement("img");
   img.src = recipe.image;
   img.alt = recipe.name;
